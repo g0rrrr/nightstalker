@@ -1,0 +1,49 @@
+{{define "content"}}
+<div class="container">
+  <div class="post-editor sixteen columns">
+    {{if .post}}
+      <h1>Editing post</h1>
+    {{else}}
+      <h1>New thread</h1>
+    {{end}}
+
+    {{if .error}}
+      <div class="error">
+        {{.error}}
+      </div>
+    {{end}}
+
+    {{if .board}}
+      <form method="POST" action="/board/{{.board.Id}}/new">
+    {{else}}
+      <form method="POST" action="/action/edit?post_id={{.post.Id}}">
+    {{end}}
+
+    {{if ShowTitleField}}
+      <input type="text" name="title" placeholder="Thread title" maxlength="70"{{if .post}}value="{{.post.Title}}"{{ end }} />
+    {{end}}
+    <textarea name="content" placeholder="Put thread stuff here" required>{{if .post}}{{.post.Content}}{{end}}</textarea>
+    {{if .post}}
+      <input type="submit" class="action-button" value="Save" />
+    {{else}}
+      <input type="submit" class="action-button" value="Post" />
+    {{end}}
+    </form>
+  </div>
+  <div class="action-bar eight columns">
+    <a id="top-action-button" class="action-button thread-reply-btn" href="#reply">Reply</a>
+  </div>
+  <div id="quickReplyPopup" class="reply">
+      <div class="reply-header" id="popupHeader">
+          <span class="close">&times;</span>
+          <span>Quick Reply</span>
+      </div>
+      <div class="padded">
+          <form method="POST" action="">
+              <textarea id="reply-field" cols="48" rows="4" wrap="soft" name="content" placeholder="reply to this thread"></textarea>
+              <input id="action-button" type="submit" value="REPLY" />
+          </form>
+      </div>
+  </div>
+</div>
+{{end}}

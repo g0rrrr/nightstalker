@@ -1,0 +1,104 @@
+{{ define "pagination" }}
+<div class="pagination sixteen columns">
+    {{if .first_page}}
+        <a class="prev" href="/board/{{ .board.Id }}/{{ .op.Id }}?page=0">&laquo; first page</a>
+    {{end}}
+    {{if .prev_page}}
+        <a class="prev" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{Add .page_id -1}}">&laquo; previous page</a>
+    {{end }}
+    {{if .next_page}}
+        <a class="next" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{Add .page_id 1}}">next page &raquo;</a>
+    {{end}}
+    {{if .last_page}}
+        <a class="next" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{ .op.GetPagesInThread }}#latest">last page &raquo;</a>
+    {{end}}
+</div>
+{{end}}
+{{define "thread_right"}}
+
+{{if .Author }}
+    by <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}">{{.Author.Username}}</a>
+    <div class="thread-list-time">{{TimeRelativeToNow .CreatedOn}}</div>
+{{else}}
+    no replies
+{{end}}
+
+{{end}}
+
+{{define "content"}}
+
+<div class="container">
+  <div class="breadcrumbs eight columns">
+    <a href="/">index</a> &raquo;
+    <a href="/board/{{.board.Id}}">{{.board.Title}}</a>
+  </div>
+  <span class="board-description">{{.board.Description}}</span>
+
+  <div class="action-bar eight columns">
+    <a id="post_button" class="action-button">New thread</a>
+  </div>
+
+  <div class="sixteen columns">
+    <table class="thread-list">
+      {{range .threads}}
+        <tr{{if .Sticky}} class="highlighted"{{end}}>
+          <td>
+            {{if IsUnread .}}
+              <span class="thread-list-unread"></span>
+            {{end}}
+            {{if .Locked}}
+              <img alt="This thread is locked. Only moderators are allowed to add responses." src="/static/images/lock.png" width="16px" height="16px" />
+            {{end}}
+
+            <div class="thread-list-container">
+                <div class="thread-list-author-avatar">
+                  {{if .Author.Avatar}}
+                    <img class="small-author-avatar author-name-level-border_{{.Author.Level}}" src="/static/data/uploads/{{.Author.Avatar}}" /> 
+                  {{end}}
+                </div>
+                <div class="thread-list-details">
+                  <div class="thread-list-title">
+                    <a style="color: white;" href="/board/{{.BoardId}}/{{.Id}}?page={{.Thread.GetPagesInThread}}#latest" class="thread-list-latest">{{.Title}}</a>
+                    <a href="/board/{{.BoardId}}/{{.Id}}?page={{.Thread.GetPagesInThread}}#latest" class="thread-list-latest">&raquo;</a>
+                  </div>
+                  <div class="thread-list-author">
+                    <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}">{{.Author.Username}}</a>
+                    {{TimeRelativeToNow .CreatedOn}}
+                  </div>
+                </div>
+            </div>
+
+          </td>
+          <td>{{template "thread_right" .Thread.GetLatestPost}}</td>
+        </tr>
+      {{else}}
+        <tr class="list-nothing"><td colspan="2">
+          Nothing yet!
+        </td></tr>
+      {{end}}
+
+    </table>
+  </div>
+</div>
+
+<div id="post_popup" class="reply">
+    <div class="reply-header" id="post-header">
+        <span class="close" id="post_close">&times;</span>
+    </div>
+    <div class="padded">
+        {{if .error}}
+          <div class="error">
+            {{.error}}
+          </div>
+        {{end}}
+
+        <form method="POST" action="/board/{{.board.Id}}/new">
+            <input type="text" name="title" placeholder="Thread title" maxlength="70"/>
+            <textarea id="edit-field" cols="48" rows="4" wrap="soft" name="content" required></textarea>
+            <input type="submit" class="popup_button" value="Post" />
+        </form>
+        
+    </div>
+</div>
+
+{{end}}

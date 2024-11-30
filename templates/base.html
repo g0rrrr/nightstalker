@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{.site_name}}</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/main.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/main.js"></script>
+
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+  </head>
+  <body>
+    <div class="nav">
+      <div class="container">
+        <div class="four columns">
+            <a class="title" href="/">𝖓𝖎𝖌𝖍𝖙𝖘𝖙𝖆𝖑𝖐𝖊𝖗</a>
+        </div>
+
+        <div class="mobile-menu">
+          {{if .current_user}}
+            <a href="/user/{{.current_user.Id}}/settings">{{.current_user.Username}}</a> //
+            <a href="/logout">logout</a>
+          {{else}}
+            <a href="/login">login</a> //
+            <a href="/register">register</a>
+          {{end}}
+        </div>
+
+        {{if .current_user }} 
+        <td style="display: block;" >
+          {{ if .current_user.GetNotifications }}
+          <div id="notifications" class="notifications-box">
+            {{ range .current_user.GetNotifications}}
+            <div class="notification" {{if not .Read}} style="animation: pulse 2s infinite; background-color: #060606;" {{end}}>
+              <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}"><img class="small-author-avatar" {{if not .Read}} class="small-author-level author-name-level-border_{{.Author.Level}}" {{end}} src="/static/data/uploads/uploads/{{.Author.Avatar}}"></a>
+                <div style="margin-right: 0px;" class="thread-list-details">
+                  <div class="thread-list-title" {{if not .Read }} style="border-bottom: 1px solid #ec0000;" {{end}}> 
+                    <div>
+                      <a class="author-name-level_{{.Author.Level}}" {{if not .Read}} style="color: #ec0000;" {{end}} href="/user/{{.Author.Id}}/">{{.Author.Username}} | </a> 
+                      <a style="color: white;font-size: 15px;" {{if eq .Message "started to follow you" }} href="/user/{{.Author.Id}}" {{else}} href="/board/1/1" {{end}} class="thread-list-latest">{{.Message}}</a>
+                      <a class="thread-list-latest" {{if not .Read}} style="color: #ec0000;"{{end}}>»</a>
+                    </div>
+                  </div>
+                  <div style="font-size: 13px;" class="thread-list-author">
+                    {{TimeRelativeToNow .CreatedOn}}
+                  </div>
+                </div>
+              </div>
+            {{end}}
+            </div>
+          </td>
+        {{end}}
+        {{end}}
+
+        <div class="center eight columns">
+          {{if .current_user}}
+            <a href="/user/{{.current_user.Id}}/messages">MESSAGES</a> // 
+            <a href="/action/mark_notifs_read" class="notification-link" id="notificationLink">NOTIFICATIONS </a> //
+              {{ if gt .current_user.GetNotificationsCount 0 }} 
+                <span style="color: darkred;" class="indicator">: {{.current_user.GetNotificationsCount}}</span>
+              {{end}}
+            </a>
+          {{end}}
+        </div>
+
+
+        {{if not .current_user}}
+        <div class="right twelve columns">
+        {{else}}
+        <div class="right four columns">
+        {{end}}
+            {{if .current_user}}
+              {{if .current_user.Avatar}}
+                  <img class="small-author-avatar" src="/static/data/uploads/{{.current_user.Avatar}}" /> 
+              {{end}}
+              <a class="author-name-level_{{.current_user.Level}}" href="/user/{{.current_user.Id}}/">{{.current_user.Username}}</a> //
+
+              {{if .current_user.IsAdmin}}
+                <a href="/admin">admin</a> //
+              {{end}}
+
+              <a href="/logout">logout</a>
+            {{else}}
+              <a href="/register">register</a> //
+              <a href="/login">login</a>
+            {{end}}
+        </div>
+      </div>
+    </div>
+
+    {{template "content" .}}
+    
+    <script>
+      $(document).ready(function(){
+        $('#notificationLink').click(function(e){
+          e.preventDefault();
+          $.get('/action/mark_notifs_read', function() {
+            $('#notifications').toggle();
+            if ($('#notifications').is(':hidden')) {
+              location.reload();
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+

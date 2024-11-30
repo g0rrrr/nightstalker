@@ -1,0 +1,250 @@
+{{ define "pagination" }}
+<div class="pagination sixteen columns">
+    {{if .first_page}}
+        <a class="prev" href="/board/{{ .board.Id }}/{{ .op.Id }}?page=0">&laquo; first page</a>
+    {{end}}
+    {{if .prev_page}}
+        <a class="prev" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{Add .page_id -1}}">&laquo; previous page</a>
+    {{end }}
+    {{if .next_page}}
+        <a class="next" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{Add .page_id 1}}">next page &raquo;</a>
+    {{end}}
+    {{if .last_page}}
+        <a class="next" href="/board/{{ .board.Id }}/{{ .op.Id }}?page={{ .op.GetPagesInThread }}#latest">last page &raquo;</a>
+    {{end}}
+</div>
+{{end}}
+
+{{define "post"}}
+<div style="margin-bottom: 15px; text-align: center;" class="post-topmeta thirteen columns">
+  <span style="border-bottom: 2px solid darkred; font-size: 22px;">{{.Title}}</span>
+  {{if .Title}} 
+    <div style="margin-top: 7px; font-size: 13px;" class="post-topmeta thirteen columns">
+      posted {{TimeRelativeToNow .CreatedOn}}
+
+      {{if CurrentUserCanModerateThread .}}
+        //
+        <a href="#">moderate</a>
+        <span class="mod-tools">
+          //
+          {{if .Sticky}}
+            <a href="/action/stick?post_id={{.Id}}">unstick</a>
+          {{else}}
+            <a href="/action/stick?post_id={{.Id}}">stick</a>
+          {{end}}
+          //
+          <a href="/action/move?post_id={{ .Id }}">move</a>
+          //
+          {{if .Locked}}
+            <a href="/action/lock?post_id={{ .Id }}">unlock</a>
+          {{else}}
+            <a href="/action/lock?post_id={{ .Id }}">lock</a>
+          {{end}}
+        </span>
+      {{end}}
+
+      {{if CurrentUserCanDeletePost .}}
+        // <a href="/action/delete?post_id={{.Id}}" class="delete">delete</a>
+      {{end}}
+
+      {{if CurrentUserCanEditPost .}}
+        // <a href="/action/edit?post_id={{.Id}}">edit</a>
+      {{end}}
+
+      {{if CurrentUserCanReply .}}
+        // <a href="#reply" class="quote-post" data-postid="{{.Id}}">quote</a>
+      {{end}}
+      
+      {{if CurrentUserCanLike .}}
+        // <a href="/action/like?post_id={{.Id}}">like</a>
+      {{end}}
+    </div>
+  {{end}}
+
+</div>
+
+<div {{ if .Title }} style="border: 2px solid #ec0000; animation: pulse 5s infinite;" {{end}}  class="post container">
+  <div {{if .Title}} style="border-right: 3px solid #ec0000;" {{end}} class="post-meta three columns">
+    {{if .Author.Avatar}}
+    <img class="author-avatar author-name-level-border_{{.Author.Level}}" {{ if .Title }} {{else}} width="80px" style="margin-bottom: 0px;" {{end}} src="/static/data/uploads/{{.Author.Avatar}}" />
+    {{end}}
+    <a {{if .Title}} {{else}} style="font-size: 16px;" {{end}} class="author-name-level_{{.Author.Level}}" id="p{{.Id}}-author" href="/user/{{.Author.Id}}">{{.Author.Username}}</a>
+    <div  class="message-userExtras">
+      {{if .Title}} 
+      <dl class="pairs pairs--justified">
+        joined // 
+        {{Joined .Author.CreatedOn}}
+      </dl>
+      <dl class="pairs pairs--justified">
+        posts // 
+        {{.Author.GetPostCount}}
+      </dl>
+      <dl class="pairs pairs--justified">
+        reputation //
+        {{.Author.GetRepCount}}
+      </dl>
+      {{else}} 
+      <dl style="margin-top: 7px;" class="pairs pairs--justified">
+        joined // 
+        {{Joined .Author.CreatedOn}}
+      </dl>
+      <dl style="margin-top: 7px;" class="pairs pairs--justified">
+        posts // 
+        {{.Author.GetPostCount}}
+      </dl>
+      <dl style="margin-top: 7px;" class="pairs pairs--justified">
+        reputation //
+        {{.Author.GetRepCount}}
+      </dl>
+      {{end}}
+    </div>
+    {{if .Author.UserTitle}}
+      <p class="user-title">{{.Author.UserTitle}}</p>
+    {{end}}
+  </div>
+
+  {{if not .Title}}
+    <div class="post-topmeta thirteen columns">
+      posted {{TimeRelativeToNow .CreatedOn}}
+
+      {{if CurrentUserCanModerateThread .}}
+        //
+        <a href="#">moderate</a>
+        <span class="mod-tools">
+          //
+          {{if .Sticky}}
+            <a href="/action/stick?post_id={{.Id}}">unstick</a>
+          {{else}}
+            <a href="/action/stick?post_id={{.Id}}">stick</a>
+          {{end}}
+          //
+          <a href="/action/move?post_id={{ .Id }}">move</a>
+          //
+          {{if .Locked}}
+            <a href="/action/lock?post_id={{ .Id }}">unlock</a>
+          {{else}}
+            <a href="/action/lock?post_id={{ .Id }}">lock</a>
+          {{end}}
+        </span>
+      {{end}}
+
+      {{if CurrentUserCanDeletePost .}}
+        // <a href="/action/delete?post_id={{.Id}}" class="delete">delete</a>
+      {{end}}
+
+      {{if CurrentUserCanEditPost .}}
+        // <a href="/action/edit?post_id={{.Id}}">edit</a>
+      {{end}}
+
+      {{if CurrentUserCanReply .}}
+        // <a href="#reply" class="quote-post" data-postid="{{.Id}}">quote</a>
+      {{end}}
+      
+      {{if CurrentUserCanLike .}}
+        // <a href="/action/like?post_id={{.Id}}">like</a>
+      {{end}}
+    </div>
+  {{end}}
+
+  <div class="post-content thirteen columns">
+    {{ParseMarkdown .Content}}
+  </div>
+
+  <div class="post-unparsed-content" id="p{{.Id}}-unparsed-content">{{.Content}}</div>
+
+  {{if SignaturesEnabled}}
+  {{if .Author.Signature.Valid}}
+  <div class="post-signature thirteen columns">
+    {{ParseMarkdown .Author.Signature.Value}}
+  </div>
+  {{end}}
+  {{end}}
+
+  <footer class="message-footer">
+  </footer>
+</div>
+{{end}}
+
+{{define "content"}}
+<div class="container">
+  <div style="font-size: 16px;" class="breadcrumbs twelve columns">
+    <a href="/">index</a> &raquo;
+    <a href="/board/{{.board.Id}}">{{.board.Title}}</a> &raquo;
+    <a href="/board/{{.board.Id}}/{{.op.Id}}">{{.op.Title}}</a>
+  </div>
+
+  {{if .current_user}}
+    <div class="action-bar four columns">
+      <a id="top-action-button" class="action-button thread-reply-btn" href="#reply">Reply</a>
+    </div>
+  {{end}}
+
+  {{template "pagination" .}}
+</div>
+
+{{if not .first_page}}
+  {{ template "post" .op}}
+{{end}}
+
+{{range .posts}}
+  {{template "post" .}}
+{{end}}
+
+<div class="container">
+  <a name="latest"></a>
+  {{template "pagination" .}}
+</div>
+
+<div class="reply container">
+  <div class="sixteen columns">
+    <div class="padded">
+      <form method="POST" action="">
+        <textarea id="reply-field" name="content" placeholder="reply"></textarea>
+        <input type="submit" class="action-button" value="reply"/>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="quickReplyPopup" class="reply">
+    <div class="reply-header" id="popupHeader">
+        <span class="close" id="reply_close">&times;</span>
+        <span>{{ .current_user.Username }}</span>
+    </div>
+    <div class="padded">
+        <form method="POST" action="">
+            <textarea id="reply-field" cols="48" rows="4" wrap="soft" name="content" placeholder="reply to this thread"></textarea>
+            <input class="popup_button" type="submit" value="REPLY" />
+        </form>
+    </div>
+</div>
+
+<div id="edit_popup" class="reply">
+    <div class="reply-header" id="edit-header">
+        <span class="close" id="edit_close">&times;</span>
+    </div>
+    <div class="padded">
+        {{if .error}}
+          <div class="error">
+            {{.error}}
+          </div>
+        {{end}}
+
+        <form method="POST" action="/action/edit?post_id={{.op.Id}}">
+            <input type="text" name="title" placeholder="Thread title" maxlength="70" value="{{.op.Title}}"/>
+                <!-- <textarea cols="48" rows="4" wrap="soft" name="title" required>{{.op.Title}}</textarea> -->
+            <textarea id="edit-field" cols="48" rows="4" wrap="soft" name="content" required>{{.op.Content}}</textarea>
+            {{if .op}}
+              <input type="submit" class="popup_button" value="Save" />
+            {{else}}
+              <input type="submit" class="popup_button" value="Post" />
+            {{end}}
+        </form>
+        
+    </div>
+</div>
+
+
+</div>
+
+{{end}}

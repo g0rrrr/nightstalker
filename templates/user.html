@@ -1,0 +1,121 @@
+{{define "post"}}
+<div class="post container">
+  <div class="post-meta three columns">
+    {{if .Author.Avatar}}
+      <img class="author-avatar author-name-level-border_{{.Author.Level}}" src="/static/data/uploads/{{.Author.Avatar}}" />
+    {{end}}
+    <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}">{{.Author.Username}}</a>
+
+    {{if .Author.UserTitle}}
+      <p class="user-title">{{.Author.UserTitle}}</p>
+    {{end}}
+
+  </div>
+
+
+  <div class="post-topmeta thirteen columns">
+    posted {{TimeRelativeToNow .CreatedOn}}
+
+    {{if CurrentUserCanModerateThread .}}
+      //
+      <a href="#">moderate</a>
+      <span class="mod-tools">
+        //
+        {{if .Sticky}}
+          <a href="/action/stick?post_id={{.Id}}">unstick</a>
+        {{else}}
+          <a href="/action/stick?post_id={{.Id}}">stick</a>
+        {{end}}
+        //
+        <a href="/action/move?post_id={{ .Id }}">move</a>
+        //
+        {{if .Locked}}
+          <a href="/action/lock?post_id={{ .Id }}">unlock</a>
+        {{else}}
+          <a href="/action/lock?post_id={{ .Id }}">lock</a>
+        {{end}}
+      </span>
+    {{end}}
+
+    {{if CurrentUserCanDeletePost .}}
+      // <a href="/action/delete?post_id={{.Id}}" class="delete">delete</a>
+    {{end}}
+
+    {{if CurrentUserCanEditPost .}}
+      // <a href="/action/edit?post_id={{.Id}}">edit</a>
+    {{end}}
+
+    {{if CurrentUserCanReply .}}
+      // <a href="#reply" class="thread-quote" thread="{{.Id}}">reply</a>
+    {{end}}
+  </div>
+
+  <div class="post-content thirteen columns">
+    {{ParseMarkdown .Content}}
+  </div>
+
+  {{if SignaturesEnabled}}
+  {{if .Author.Signature.Valid}}
+  <div class="post-signature thirteen columns">
+    {{ParseMarkdown .Author.Signature.Value}}
+  </div>
+  {{end}}
+  {{end}}
+</div>
+{{end}}
+
+{{ define "content" }}
+{{if .error}}
+<div class="error">
+  {{.error}}
+</div>
+{{end}}
+<div class="container">
+  <div style="display: block;" class="full-box sixteen columns">
+    <div class="header">
+        <img class="author-name-level-border_{{.user.Level}}" height="120px" width="120px" src="/static/data/uploads/{{.user.Avatar}}" alt="Avatar">
+        <div class="stats-info">
+          <h1> <span class="author-name-level_{{.user.Level}}">{{ .user.Username }} {{if .current_user}} {{ if ne .user.Username .current_user.Username }} <form method="POST" action=""> <input class="profile-btn" id="action-button" type="submit" {{if .already_following}} value="UNFOLLOW" {{else}} value="FOLLOW" {{end}} /> </form> {{end}} {{end}}</span>  </h1>
+          
+          
+          <p class="level">Level {{.user.Level}} <span class="level-icon level-icon-{{ len (printf "a%*s" .user.Level "") }}">⚡</span> [0x{{.user.Level}}]</p>
+            <div class="progress-bar">
+              <div style="width: {{.progress}}%" class="progress-fill progress-fill-level-{{.user.Level}}">
+                  <span class="progress-text">{{.needed}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-icon">followers</span>
+            <span class="stat-value">{{ .user.GetFollowersCount }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">followings</span>
+            <span class="stat-value">{{ .user.GetFollowingsCount }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">posts</span>
+            <span class="stat-value">{{ .user.GetPostCount}} </span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">last_seen</span>
+            <span class="stat-value">{{ if not .user.HideOnline }}{{ TimeRelativeToNow .user.LastSeen }}{{ end }}</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">created</span>
+            <span class="stat-value">{{ TimeRelativeToNow .user.CreatedOn }}</span>
+        </div>
+    </div>
+  </div>
+  <div class="sixteen columns">
+    <h1>Posts by {{ .user.Username }}</h1>
+  </div>
+</div>
+
+{{ range .user.GetPosts 0 }}
+    {{ template "post" . }}
+{{ end }}
+{{ end }}
+

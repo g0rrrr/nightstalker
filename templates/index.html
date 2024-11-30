@@ -1,0 +1,218 @@
+{{define "board-right"}}
+  {{if .Op.Title}}
+    <a href="board/{{.Op.BoardId}}/{{.Op.Id}}?page={{.Op.GetPagesInThread}}#latest">
+      {{.Op.Title}}
+    </a>
+    by
+    {{if .Latest}}
+      <a href="user/{{.Latest.Author.Id}}">{{.Latest.Author.Username}}</a>
+      <div class="board-latest-time">{{TimeRelativeToNow .Latest.CreatedOn}}</div>
+    {{else}}
+      <a href="user/{{.Op.Author.Id}}">{{.Op.Author.Username}}</a>
+      <div class="board-latest-time">{{TimeRelativeToNow .Op.CreatedOn}}</div>
+    {{end}}
+    {{else}}
+    NO POSTS!
+  {{end}}
+{{end}}
+
+{{define "thread_right"}}
+
+{{if .Author }}
+  last reply by <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}">{{.Author.Username}}</a> {{TimeRelativeToNow .CreatedOn}}
+{{else}}
+    NO REPLIES !!!
+{{end}}
+
+{{end}}
+
+
+{{define "content"}}
+<div class="container">
+  <div class="board-nothing" style="font: 1.5px/2px monospace; background-color: #060606; overflow-x: hidden; overflow-y: hidden; border: none; color: #fd0100;">
+    <div style="font-size: 15px; font-family: 'Fixedsys', sans-serif; color:white;" id="left">
+      <b>members: <a>{{.user_count}}</a></b><br><br><br><br><br><br><br><br>
+      <b>threads: <a>{{.total_posts}}</a></b><br>
+    </div>
+
+    <div style="font-size: 15px; font-family: 'Fixedsys', sans-serif; color:white;" id="right">
+      {{if .latest_user}}
+      <b>new_user:  <a class="author-name-level_{{.latest_user.Level}}" href="user/{{.latest_user.Id}}">{{.latest_user.Username}}</a></b><br><br><br><br><br><br><br><br>
+      {{end}}
+
+      <b>online:</b><br><br><br><br><br>
+      {{range .online_users}}
+        <b><a class="online-user" href="user/{{.Id}}"><img style="vertical-align: middle; width:20px;height:20px;border:1.5px solid green;" src="/static/data/uploads/{{.Avatar}}"/></a></b>
+      {{else}}
+        <br><br><a> NO ONLINE USERS!</a>
+      {{end}}
+    </div>
+
+
+    <pre>
+                                                                                                      /                                                                                                 
+                                                                                                        &&&&#& @                                                                                        
+                                                                                                   *&   %@%%(/( %                                                                                       
+                                                                                                   /%%% .(% ./@ @                                                                                       
+                                                                                                    @%%/*((( ,*. @                                                                                      
+                                                                                                     @(%&#((&.@/  @                                                                                     
+                                              ((@&/#                                                  &##((#%&@/   @                                                                                    
+                                            .%/#@#(#%        ,#&                                        &###&&&#(   %                                                                                   
+                                          ,@* (/(%##@ ,#&%%##&&                                           %##(&@(.   /                                                                                  
+                                        /( **    /(#%###&%&(                                                 /&&@%     @                                                                                
+                                      //    #@,,##%#/(##,                                                       @#.      #                                                                              
+                                     @/  /   **,*(&@(                                                            &@        .                                                                            
+                                    %@,. ,@@@,,..                                                                  %*       &                                                                           
+                                    %@*,/#%(%@@@#%                                                                  %@       .@                                                                         
+                                    @(/#,%(&%*                                                                        @        (#                                                                       
+                                    @,   .(#%.                                                                         &         &                                                                      
+                                    @,    /#(                                                                           ,#         @                                                                    
+                                    @      #%                                                                             @         .&                                                                  
+                                   ,&      ,&                                                                              @.         &.                                                                
+                                   #%      ,#                                                                               .(         ,@                                                               
+                                   @,      .#.                                                                                &/         @.                                                             
+                                   @       *#,                                                      #@@@@@@@@&@@/              (&#(.      ((                                                            
+                                  *&       /@@                                                 .%@@@@@@@@@@@@@@@@@@&@,          ,%&/.       (                                                           
+                                  #*      /(@@                                                &@@@@@@@@@@@@@@@@@@@@@&@@@.        &#%/       /                    &%@&##@%,                              
+                                  @,     .#@@%&                                              (@&@@@&@@@&@@@@&@@@@@@@@@@@@#       &&(..       %                       (((@&* #.                          
+                                  %,     *(@%#&@                                            /@@@@@@@@@@@@@@@@@@@@@&&@@@@@@/     ,#(**       @                         %%%@%##&(                         
+                                  %.      .**//*@@                                         .@&@@&@&@@@@@@@@@@@@@@@%@(@@@@@@#   &(//*       @                           &(((#%@% *                       
+                                  ,@,        .*(//%@,                                     .@@@&@@@@@@@@&@@@@@@@&(*%..*@&@@@@ .@(/(        &                            &(#/(#%& &                       
+                                    #&        ...*///#@*                                 ,(@@@@@@@@@@@@@@@@@@@&( (   ,@@@@@@%@((         %                ,%@&@&(..  #@(#@#*,    #                      
+                                       &*      ....,/(((@@.                             #%@@@@&@@@@@@@@@@&(&@&@@//,  @@@@@@@&((         #                  ,%&&@&%&&%%(((((##@&   &                     
+                                         ,%       ,,,,*#%%%@@                          #@@@@@@@@@@@@@@@%&#. .(/(((@&@@@@@@@%#* .      ,.                             *&(#((/#@&   .@                    
+                                            @          .(@@%%&@&                      /&@@@@@@@@@@@@@&&#%      , #@@@&@@@&@#*,..     *                                    @@@@&,   @                    
+                                              (%             ,&%&&@@*                /@@@@@@@@&@@&&#%/*.     /   @@@@@@@@#@, .      @                                    .@@&,/*   &                    
+                                                 &%              .%%#%@@%          @&%@@@@@@@@&&@@@&(     ,.  @@@&@@@@@&%#(..      #                                     @@@(     /                     
+                                                   .@,              .&&##&@@@    @@&@@@@@@@@@@@@@@@@@@*    &@@&@@@@@@@%@ @..     #(                                     @@#(      %                     
+                                                      .@.            #@%%(#@%%@@&%@@@@@@@@@&&@@&@@@&%@@&&    &@@@@@@@@&%%.    %#@                                     %@(#(      @                      
+                                                         .@%         /&@@@@@#%&@&&&%**#@@@&@@@@&@@@&%%@@@@@@@@@@@@@@@#&   *&&&@,                                     %%#(/      @                       
+                                                             @@@%@@@@@          ..,/(##@@%@@@&@@@@@@%%&@&@@@@@@@@%&@%    @@@&&%&@/                                 ,@((/       @/                       
+                                                                %@@@.           (&&%(/,@@/#@@@@&@&@@@#@@@@@@@@@@(@@@   *@@@@%(.    ,@                             @%%(*       &                         
+                                                                 .@                    (@/**@@&@@@@@@&@#%&&@@@@*(@@/ .@&&@@%#*# ,      &&                       #@%%/        @                          
+                                                                 @                      /@//*@&@@@@@(((((#/@@&& @&@%&@&@@@@@@@@@,,.,       *@*                 @&&(.        @                           
+                                                                @          .              %@*(@&@@@@&/,    @(&&,/*@@&@@@@@@@@@&&@%@/(# .         (&(         #@&/#.       .&                            
+                                                               @ *.    ,%#%#,               .&&/@&@@@/,.    @#&@.#@@@@&@@@@@@&///*/(*/*.....            ,#%#&%,,/*        &                             
+                                                              @,*((##&&@@@&@&% .               @&(@@@*        @@@%@@@@@@&@@@@@@&&&*..............                        %                              
+&&*....       *@.                                           ,@,,*/(/#@@@@@@@@@@&*,*             &@ &@@   ..   %(@@@@@@@@@@&%&&&@.  .@&( .........                       (                               
+&(,,%@.......   ./@,                                       (#..,*,//@@@@@@@@@@@@@@@(,/.          *& @@,.      @#*&@@@@@@&@##& .,@       /&@@&(,..   .                 /%                                
+    @%//#%#(##*.....  .@(                                 @/,,.     @@&@@&@@@*(((,/&@@@(*          (%@* ....  @,,(&&@@@@@@#&#    @,          .,*%@@@,               #@                                  
+%&///%#%(%#%##@@&&&/.      .%&.                          @(,        @@@@@@@@&/*/(/*                  @*    .. & */%@@@@@&@&%*     @                         .*..#%,                                     
+/#&(((##%&&&&&(   /#((.          (@&/                  #@#         @@@@@@@@&@...*,                   /       &.   %@&.@&@@@/#      @                                                                    
+&(/(@#%&%%%&..%%&%, ,%@#/**.             *#&@&*.     (@(         .@@@@@@@@@&@@,                      (            ,@@  @&@@*#       %                                                                   
+#@&/&%@&&%&@@/            &#*,.                   .@@*          &@@@@@,,@&@@@@@(                         ,/%@(    *&@   @@@@/(       /                                                                  
+ &%%#*(&@@                   .@#**,                            @@@@@*,*,#@/@@@@@/                         (/(#(((*/#&    @@@((        ,                                                                 
+ ,*/%@&                          .@#/*,.                     @&@@@@   ./*%@@&@@@@@.                       #(/(((((/*#,    @@@#(.       *                                                                
+                                     .&%#***.              @@@&@&(      **#@&&@@@&@%                        ,*/*/////@/    @@@/,.      .#                                            (     ,            
+                                          #@&&%/,   .    %@&@,@@         /@@@,  *@@&(.                        ,,**,*//&*    @@@/..      ,@*                                    (     /*%  / @           
+                                              .@@&@&%@&@@/.  %@          #@@      .@&((                           ,..,*/@,   #@@*,,     ,.&/                                   %*&   &,.( & @           
+                                                    ,.      %@          %@%        #&((//                          ...,,,,#%  .@@@.,       *&#                            &.    @, *&(/. &% (           
+                                                           /@          .@#         /@(//*/,.                        .,,.,*,**@  @@&%            #@*                        %,(   #  @(@% ,@#            
+                                                           @.         .&@          (@(////(/*,               %       ...,,,**,*& *%%%(.               %/                    .% .* @, (@( (@             
+                                                          %/         ,&@.          %@(%%%@     ,             &&       ,,,,.(/(/(@  %%#((#*                 *%&*               @  /#/  . .#.             
+                                                         &@         *%@/           @%#&&&&%                            .,,,(#((/&#   .%@&#(/,,..                  ,&@*         @      /*&               
+                                                      #&#.         ##&/           .@,.,*&@@%                            ,,,(%((/%@*        ,&(,,,,,,,,,,.                 .%#%%     */%                 
+                                                   /@,          .#&&&(            .@,.  .,@(%                         ...,/@@@*((%@%              .(&%*,..,,,,...  .,//(#%&%@/    ./(.                  
+                                               ,&/          *(#%%&@@/             .@,.. ......              .....,.......#@@@@&/(/&%%                          /&(/#%(///#%&&,   ,&                     
+                                          .&&.            ,/((%%@@@                @%.. .....       .,**,,,,.........,.,@@@@@@@&(/*///                                                                  
+                  ,#                  /&                */#%%&%&,                  @@%... ....       .... ,,,,,,,,.,,,/@@@@@&@@@@**/*&.                                                                 
+                   .*           *&@(                .(%&%@@%                       #@#%.  .....       *,....,,,,,,,,,&&@@@@@@@@&((/**%%                                                                 
+                      (%@%&&. ..,,..          ./%%%%@%.                            (@/((. .....        &#%/**,.,,,,#@&@@@@@@@&@%%**.,#&                                                                 
+                        @&#((/.        .*%%@&@#,.                                  *@#(.........        #&@@@@&@@@@@&@@@@@@@@@@&(, ..(&                                                                 
+                        #%. ,%%##(%&@@@&*                                          .@## .........        .&@@@@@@&@@&@@@&@@@&@@&&   .,%                                                                 
+                         */,%@@@&&,                                                 @&% ..........        ..@@&@&@@@@@@@&&&&@@@&#     &                                                                 
+                                                                                    %&#    ........        ..&&@@@@@@@&@#%&&@@@&(     &                                                                 
+                                                                                    &&%     .......          .%@@@@@@&/ .%&%&@@@/    //                                                                 
+                                                                                    /@%       .....         .../@@@@@&%   #%%%##.    @                                                                  
+                                                                                     @(         ....         ...(&@&@@&    &%#%#.   @/                                                                  
+                                                                                     /&          ....         ..#@@@@@@&   (#(#(.  *&                                                                   
+                                                                                      @           ..,          .,@@@@@&@    &((/   @                                                                    
+                                                                                      /@           ..           ,#@@&@@@,   ,..,  @                                                                     
+                                                                                       (#                        ,(@@@@&@        &/                                                                     
+                                                                                        %*                        /(%@@@&                                                                               
+                                                                                         @,                        ,@&@@&#                                                                              
+                                                                                                                                                                                                        
+
+    </pre>
+
+
+    </div>
+    <div style="margin-top: 0px; margin-bottom: 10px;">
+      <a style="color: #ffffff; margin:auto; text-align:center; display:block;">WE ARE ALL EVIL IN SOME FORM OR ANOTHER</a>
+      <a style="color: #ff000D; margin:auto; text-align:center; display:block;">ARE WE NOT?</a>
+    </div>
+    <div style="text-align: center;" class="sixteen columns">
+      <div style="board-list">
+      {{if .boards}}
+        {{range .boards}}
+            // <a href="board/{{.Id}}" style="font-size: 18px;" class="board-title">{{.Title}}</a> //
+        {{end}}
+      {{else}}
+        <div class="board-nothing">NO BOARDS!!!</div>
+      {{end}}
+      </div>
+
+
+      <div style="margin-top: 20px;font-size: 15px;">
+        <a {{if eq .SortBy "created_on"}} style="color: #ec0000;" {{else}} style="color: #1f1f1f;"{{end}} href="?sort=created_on">LATEST</a> |
+        <a {{if eq .SortBy "latest_reply"}} style="color: #ec0000;" {{else}} style="color: #1f1f1f;"{{end}} href="?sort=latest_reply">POPULAR</a> |
+        <a {{if eq .SortBy "following"}} style="color: #ec0000;" {{else}} style="color: #1f1f1f;"{{end}} href="?sort=following">FOLLOWING</a> 
+      </div>
+
+      <table class="thread-list">
+        {{if .threads}}
+        {{range .threads}}
+          <tr{{if .Sticky}} class="highlighted"{{end}}>
+            <td>
+              <div class="thread-list-container" >
+                {{if .Author.Avatar}}
+                <!-- <img class="small-author-avatar author-name-level-border_{{.Author.Level}}" src="/static/data/uploads/uploads/{{.Author.Avatar}}" />  -->
+                  <img class="small-author-avatar" src="/static/data/uploads/uploads/{{.Author.Avatar}}" />
+                {{end}}
+                <div style="margin-right: 0px;" class="thread-list-details nine columns">
+                  <div class="thread-list-title">
+                    <div>
+                      <a href="/board/{{.BoardId}}/">{{ if eq .BoardTitle "BEST OF THE BEST" }} BOTB {{else}} {{.BoardTitle}} {{end}} | </a> 
+                      <a style="color: white;font-size: 15px;" href="/board/{{.BoardId}}/{{.Id}}?page={{.Thread.GetPagesInThread}}#latest" class="thread-list-latest">{{.Title}}</a>
+                      <a href="/board/{{.BoardId}}/{{.Id}}?page={{.Thread.GetPagesInThread}}#latest" class="thread-list-latest">&raquo;</a>
+                    </div>
+                  </div>
+                  <div class="thread-list-author">
+                    <a class="author-name-level_{{.Author.Level}}" href="/user/{{.Author.Id}}">{{.Author.Username}}</a>
+                    {{TimeRelativeToNow .CreatedOn}}
+                  </div>
+                </div>
+                <div style="margin-left: 0px;margin-right: 0px;" class="five columns">
+                  <div class="thread-list-title">
+                    <div style="font-size: 13px;margin-top:5px;">
+                      {{template "thread_right" .Thread.GetLatestPost}}
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-left: 0px;">
+                  <div style="font-size: 12px;margin-top:6px;" class="thread-list-title">
+                    <div style="">
+                      <a>VIEWS: </a>{{.Views}} 
+                    </div>
+                  </div>
+                  <div class="thread-list-author">
+                    <a>REPLIES: </a>{{.Thread.GetRepliesInThread}} 
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {{end}}
+        {{else}}
+          <tr class="list-nothing"><td colspan="2">
+            NO NEW THREADS !!!
+          </td></tr>
+        {{end}}
+
+      </table>
+
+    </div>
+  </div>
+</div>
+
+{{end}}
